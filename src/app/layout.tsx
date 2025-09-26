@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PhysiQ",
-  description: "Intelligent Bodybuilding.",
+  title: "OS",
+  description: "Internal Operating System.",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
