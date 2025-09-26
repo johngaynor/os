@@ -33,9 +33,7 @@ export default function DesktopNavAuth() {
 
   const segments = pathname.split("/").filter(Boolean);
   const path = segments[0]
-    ? segments[0] === "checkins"
-      ? "Check Ins"
-      : segments[0].charAt(0).toUpperCase() + segments[0].slice(1)
+    ? segments[0].charAt(0).toUpperCase() + segments[0].slice(1)
     : "Dashboard";
 
   function navigateToTab(tabName: string) {
@@ -92,6 +90,9 @@ export default function DesktopNavAuth() {
         <TabsList className="flex bg-transparent p-0">
           {TabComponent("Dashboard", path === "Dashboard", () =>
             navigateToTab("Dashboard")
+          )}
+          {TabComponent("Social", path === "Social", () =>
+            navigateToTab("Social")
           )}
         </TabsList>
       </Tabs>
