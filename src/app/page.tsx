@@ -1,16 +1,32 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const Main = () => {
   const { user, isLoaded } = useUser();
+  const router = useRouter();
 
-  // Redirect authenticated users to dashboard
-  if (user) redirect("/dashboard");
+  useEffect(() => {
+    if (isLoaded) {
+      if (user) {
+        router.push("/dashboard");
+      } else {
+        router.push("/sign-in");
+      }
+    }
+  }, [user, isLoaded, router]);
 
-  // Redirect unauthenticated users to sign-in page
-  if (isLoaded && !user) {
-    redirect("/sign-in");
+  // Show loading state while determining auth status
+  if (!isLoaded) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-2 text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return null;

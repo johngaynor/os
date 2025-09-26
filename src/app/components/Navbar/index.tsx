@@ -11,9 +11,10 @@ export default function NavbarWrapper({
   children: React.ReactNode;
 }>) {
   const isMobile = useWindowDimensions("(max-width: 768px)");
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
 
-  if (isMobile === undefined) return null;
+  // Wait for both window dimensions and user to be loaded
+  if (isMobile === undefined || !isLoaded) return null;
 
   return (
     <div className="min-h-screen flex flex-col">
