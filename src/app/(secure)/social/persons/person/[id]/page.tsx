@@ -76,7 +76,7 @@ export default function PersonPage() {
       <PageTemplate title="Person Not Found" showTitleMobile>
         <div className="text-center py-8">
           <p className="text-muted-foreground mb-4">
-            The person you're looking for doesn't exist.
+            The person you&apos;re looking for doesn&apos;t exist.
           </p>
           <Button onClick={() => router.push("/social/persons")}>
             Back to People
