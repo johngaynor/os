@@ -160,6 +160,10 @@ export const usePersonStore = create<PersonState>()(
       deletePerson: async (id) => {
         set({ loading: true, error: null });
         try {
+          // Get the person's name before deleting for the toast message
+          const state = get();
+          const personToDelete = state.persons?.find((person) => person.id === id);
+          
           const response = await fetch(`/api/persons/${id}`, {
             method: "DELETE",
           });
@@ -176,6 +180,10 @@ export const usePersonStore = create<PersonState>()(
             loading: false,
             error: null,
           }));
+          
+          if (personToDelete) {
+            toast.success(`${personToDelete.name} has been deleted successfully!`);
+          }
           return true;
         } catch (error) {
           set({
