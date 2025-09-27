@@ -4,8 +4,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { usePersonStore, Person } from "@/store/personStore";
+import { FieldInput } from "../../../components/Forms/FieldInput";
 
 const personSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -86,81 +87,66 @@ export default function PersonForm({
 
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-4xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div>
-            <label className="block font-medium mb-1">Name *</label>
-            <Input {...register("name")} disabled={loading} placeholder="..." />
-            {errors.name && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.name.message}
-              </p>
-            )}
-          </div>
+          <FieldInput
+            label="Name"
+            name="name"
+            register={register("name")}
+            error={errors.name}
+            required
+            disabled={loading}
+            placeholder="Enter person's name"
+          />
 
-          <div>
-            <label className="block font-medium mb-1">
-              Origin (How you met)
-            </label>
-            <Input
-              {...register("origin")}
-              disabled={loading}
-              placeholder="e.g., Coffee shop, LinkedIn, Conference"
-            />
-          </div>
+          <FieldInput
+            label="Origin"
+            tooltip="Where or how did you meet this person?"
+            name="origin"
+            register={register("origin")}
+            disabled={loading}
+            placeholder="e.g., Coffee shop, LinkedIn, Conference"
+          />
 
-          <div>
-            <label className="block font-medium mb-1">
-              Relationship Type *
-            </label>
-            <Input
-              {...register("relationshipType")}
-              disabled={loading}
-              placeholder="e.g., Friend, Professional, Acquaintance"
-            />
-            {errors.relationshipType && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.relationshipType.message}
-              </p>
-            )}
-          </div>
+          <FieldInput
+            label="Relationship Type"
+            tooltip="How would you classify this person?"
+            name="relationshipType"
+            register={register("relationshipType")}
+            error={errors.relationshipType}
+            required
+            disabled={loading}
+            placeholder="e.g., Friend, Professional, Acquaintance"
+          />
 
-          <div>
-            <label className="block font-medium mb-1">
-              Relationship Strength (1-5) *
-            </label>
-            <Input
-              type="number"
-              min={1}
-              max={5}
-              {...register("relationshipStrength", {
-                valueAsNumber: true,
-                required: "Relationship strength is required",
-              })}
-              disabled={loading}
-            />
-            {errors.relationshipStrength && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.relationshipStrength.message}
-              </p>
-            )}
-          </div>
+          <FieldInput
+            label="Relationship Strength (1-5)"
+            name="relationshipStrength"
+            register={register("relationshipStrength", {
+              valueAsNumber: true,
+              required: "Relationship strength is required",
+            })}
+            error={errors.relationshipStrength}
+            type="number"
+            min={1}
+            max={5}
+            required
+            disabled={loading}
+          />
 
-          <div>
-            <label className="block font-medium mb-1">Occupation</label>
-            <Input
-              {...register("occupation")}
-              disabled={loading}
-              placeholder="e.g., Software Engineer, Teacher"
-            />
-          </div>
+          <FieldInput
+            label="Occupation"
+            name="occupation"
+            register={register("occupation")}
+            disabled={loading}
+            placeholder="e.g., Software Engineer, Teacher"
+          />
 
-          <div>
-            <label className="block font-medium mb-1">Notes/Context</label>
-            <Input
-              {...register("context")}
-              disabled={loading}
-              placeholder="Additional notes about this person"
-            />
-          </div>
+          <FieldInput
+            label="Notes/Context"
+            name="context"
+            register={register("context")}
+            disabled={loading}
+            placeholder="Additional notes about this person"
+          />
         </div>
 
         <div className="flex justify-end gap-2">

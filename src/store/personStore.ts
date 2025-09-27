@@ -87,7 +87,6 @@ export const usePersonStore = create<PersonState>()(
       createPerson: async (personData) => {
         set({ loading: true, error: null });
         try {
-          console.log("starting to create person", personData);
           const response = await fetch("/api/persons", {
             method: "POST",
             headers: {
@@ -95,8 +94,6 @@ export const usePersonStore = create<PersonState>()(
             },
             body: JSON.stringify(personData),
           });
-
-          console.log(response);
 
           if (!response.ok) {
             const errorData = await response.json();

@@ -8,8 +8,6 @@ export default async function SecureLayout({
 }) {
   const { userId } = await auth();
 
-  console.log(userId);
-
   if (!userId) {
     redirect("/sign-in");
   }
