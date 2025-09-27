@@ -5,8 +5,10 @@ import { useParams, useRouter } from "next/navigation";
 import { usePersonStore } from "@/store/personStore";
 import { Page, Error } from "../../../../components/Pages";
 import EditPerson from "../../components/PersonForm";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button, Skeleton, H3 } from "@/components/ui";
+import { Card, CardContent } from "@/components/ui/card";
+import { FieldValue } from "../../../../components/Forms/FieldValue";
+import { ArrowLeft, Edit, Trash2 } from "lucide-react";
 
 export default function Person() {
   const params = useParams();
@@ -72,106 +74,99 @@ export default function Person() {
   if (editMode) {
     return (
       <Page title={`Edit ${person.name}`} showTitleMobile>
-        <div className="space-y-4">
-          <div className="flex gap-2 mb-4">
-            <Button
-              variant="outline"
-              onClick={() => setEditMode(false)}
-              disabled={loading}
-            >
-              Cancel
-            </Button>
-          </div>
-          <EditPerson
-            person={person}
-            onSuccess={() => setEditMode(false)}
-            onCancel={() => setEditMode(false)}
-          />
-        </div>
+        <EditPerson
+          person={person}
+          onSuccess={() => setEditMode(false)}
+          onCancel={() => setEditMode(false)}
+        />
       </Page>
     );
   }
 
   return (
     <Page title={person.name} showTitleMobile>
-      <div className="space-y-6">
-        {/* Action Buttons */}
-        <div className="flex gap-2">
-          <Button onClick={() => setEditMode(true)}>Edit</Button>
-          <Button variant="destructive" onClick={handleDelete}>
-            Delete
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => router.push("/social/persons")}
-          >
-            Back to People
-          </Button>
-        </div>
-
-        {/* Person Details */}
-        <div className="border rounded-lg p-6 space-y-4">
-          <div>
-            <h3 className="font-semibold text-lg mb-2">Basic Information</h3>
-            <div className="grid gap-2">
-              <div>
-                <span className="text-muted-foreground">Name:</span>
-                <span className="ml-2 font-medium">{person.name}</span>
-              </div>
-              {person.occupation && (
-                <div>
-                  <span className="text-muted-foreground">Occupation:</span>
-                  <span className="ml-2">{person.occupation}</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-lg mb-2">Relationship</h3>
-            <div className="grid gap-2">
-              <div>
-                <span className="text-muted-foreground">Type:</span>
-                <span className="ml-2">{person.relationshipType}</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Strength:</span>
-                <span className="ml-2">{person.relationshipStrength}/5</span>
-              </div>
-              {person.origin && (
-                <div>
-                  <span className="text-muted-foreground">How we met:</span>
-                  <span className="ml-2">{person.origin}</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {person.context && (
+      <div className="w-full mb-20">
+        <Card className="w-full rounded-sm p-0">
+          <CardContent className="flex flex-col md:flex-row justify-between grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
             <div>
-              <h3 className="font-semibold text-lg mb-2">Notes</h3>
-              <p className="text-muted-foreground">{person.context}</p>
-            </div>
-          )}
+              <div className="mb-6 flex justify-between items-center">
+                <H3>{person.name}</H3>
+                <div>
+                  <Button
+                    variant="outline"
+                    onClick={() => router.push("/social/persons")}
+                  >
+                    <ArrowLeft className="font-extrabold" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setEditMode(true)}
+                    className="ml-2"
+                  >
+                    <Edit className="font-extrabold" />
+                  </Button>
+                  <Button
+                    className="ml-2"
+                    variant="destructive"
+                    onClick={handleDelete}
+                  >
+                    <Trash2 className="font-extrabold" />
+                  </Button>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-muted-foreground">Occupation</p>
+                  <p className="font-semibold line-clamp-1">
+                    {person.occupation || "--"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Relationship Type</p>
+                  <p className="font-semibold line-clamp-1">
+                    {person.relationshipType}
+                  </p>
+                </div>
+                <FieldValue
+                  title="Relationship Strength"
+                  value={`${person.relationshipStrength}/5`}
+                />
+                <FieldValue
+                  title="Added"
+                  value={new Date(person.createdAt).toLocaleDateString()}
+                />
+              </div>
 
-          <div>
-            <h3 className="font-semibold text-lg mb-2">Timeline</h3>
-            <div className="grid gap-2 text-sm">
-              <div>
-                <span className="text-muted-foreground">Added:</span>
-                <span className="ml-2">
-                  {new Date(person.createdAt).toLocaleDateString()}
-                </span>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Last updated:</span>
-                <span className="ml-2">
-                  {new Date(person.updatedAt).toLocaleDateString()}
-                </span>
-              </div>
+              {/* How we met - Full width */}
+              {person.origin && (
+                <div className="py-4">
+                  <FieldValue
+                    title="Origin Story"
+                    value={person.origin}
+                    className="w-full"
+                  />
+                </div>
+              )}
+
+              {/* Notes - Full width */}
+              {person.context && (
+                <div className="py-4">
+                  <FieldValue
+                    title="Notes"
+                    value={person.context}
+                    className="w-full"
+                  />
+                </div>
+              )}
             </div>
-          </div>
-        </div>
+            <div>
+              {/* Placeholder for graph */}
+              <Card className="h-64 flex items-center justify-center bg-muted/50">
+                <p className="text-muted-foreground">Graph placeholder</p>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </Page>
   );

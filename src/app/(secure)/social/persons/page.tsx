@@ -77,7 +77,7 @@ export default function Persons() {
 
   return (
     <Page title="People" showTitleMobile>
-      <div className="w-full p-6">
+      <div className="w-full">
         <div className="space-y-4 w-full">
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
             {/* Search Input - Full Width on mobile, flex-1 on larger screens */}

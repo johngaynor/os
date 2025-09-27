@@ -78,7 +78,7 @@ const AppsGrid: React.FC<{ filter: string }> = ({ filter }) => {
 
               {/* App tile - clickable for navigation */}
               <Link href={app.link}>
-                <div className="flex flex-col h-[200px] w-full text-left whitespace-normal break-words border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-md px-3 py-2 text-sm cursor-pointer transition-all items-center justify-center">
+                <div className="flex flex-col h-[200px] w-full text-left whitespace-normal break-words border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-[#0E0E0E] dark:border-input dark:hover:bg-input/50 rounded-md px-3 py-2 text-sm cursor-pointer transition-all items-center justify-center">
                   <h2 className="text-2xl font-bold text-center">{app.name}</h2>
                   <p className="text-muted-foreground text-center py-2">
                     {app.description}
