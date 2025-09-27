@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { usePersonStore } from "@/store/personStore";
 import { Error, Page } from "../../components/Pages";
 import { Button, Input, Badge } from "@/components/ui";
@@ -21,7 +21,7 @@ const defaultFilters = {
 };
 
 export default function Persons() {
-  const { fetchPersons, persons, loading, error } = usePersonStore();
+  const { persons, loading, error } = usePersonStore();
   const [filters, setFilters] = useState(defaultFilters);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -52,12 +52,6 @@ export default function Persons() {
 
     return filtered;
   })();
-
-  useEffect(() => {
-    if (!persons && !error) {
-      fetchPersons();
-    }
-  }, [persons, error, fetchPersons]);
 
   if (loading) return <PersonListLoading />;
   if (error) return <Error error={error} />;

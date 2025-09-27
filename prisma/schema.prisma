@@ -25,5 +25,25 @@ model Person {
   createdAt             DateTime @default(now()) @map("created_at")
   updatedAt             DateTime @updatedAt @map("updated_at")
 
+  // Relations
+  interactions          Interaction[]
+
   @@map("persons")
+}
+
+model Interaction {
+  id                    String    @id @default(cuid())
+  personId              String    @map("person_id")
+  latitude              Float?
+  longitude             Float?
+  placeName             String?   @db.Text @map("place_name")
+  interactionTime       DateTime? @map("interaction_time")
+  notes                 Json?
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  person                Person    @relation(fields: [personId], references: [id], onDelete: Cascade)
+
+  @@map("interactions")
 }

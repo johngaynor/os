@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { usePersonStore } from "@/store/personStore";
 import { Page, Error } from "../../../../components/Pages";
@@ -14,29 +14,17 @@ import PersonLoading from "./components/PersonLoading";
 export default function Person() {
   const params = useParams();
   const router = useRouter();
-  const { fetchPersons, persons, deletePerson, loading, error } =
-    usePersonStore();
+  const { persons, deletePerson, loading, error } = usePersonStore();
   const [editMode, setEditMode] = useState(false);
-
-  useEffect(() => {
-    if (!persons && !error) {
-      fetchPersons();
-    }
-  }, [persons, error, fetchPersons]);
 
   const personId = params.id as string;
   const person = persons?.find((p) => p.id === personId) || null;
 
   const handleDelete = async () => {
     if (person && confirm(`Are you sure you want to delete ${person.name}?`)) {
-      console.log("Attempting to delete person:", person.id);
       const result = await deletePerson(person.id);
-      console.log("Delete result:", result);
       if (result) {
         router.push("/social/persons");
-      } else {
-        console.error("Delete failed");
-        alert("Failed to delete person. Please try again.");
       }
     }
   };
