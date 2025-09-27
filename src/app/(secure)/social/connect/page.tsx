@@ -201,7 +201,8 @@ export default function Connect() {
                         variant="secondary"
                         className="flex items-center gap-2"
                       >
-                        person <span className="italic font-normal">=</span> &quot;
+                        person <span className="italic font-normal">=</span>{" "}
+                        &quot;
                         {selectedPersonId}&quot;
                         <button
                           onClick={() => updateSelectedPerson(null)}
@@ -217,7 +218,8 @@ export default function Connect() {
                         className="flex items-center gap-2"
                       >
                         name, location, notes{" "}
-                        <span className="italic font-normal">contains</span> &quot;
+                        <span className="italic font-normal">contains</span>{" "}
+                        &quot;
                         {interactionSearch}&quot;
                         <button
                           onClick={() => setInteractionSearch("")}
