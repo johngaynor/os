@@ -21,11 +21,15 @@ export default function NewPerson() {
     router.push("/social/persons");
   };
 
+  const handleCancel = () => {
+    router.push("/social/persons");
+  };
+
   if (error) return <Error error={error} />;
 
   return (
     <Page title="Add New Person" showTitleMobile>
-      <EditPerson onSuccess={handleSuccess} />
+      <EditPerson onSuccess={handleSuccess} onCancel={handleCancel} />
     </Page>
   );
 }

@@ -82,7 +82,11 @@ export default function Person() {
               Cancel
             </Button>
           </div>
-          <EditPerson person={person} onSuccess={() => setEditMode(false)} />
+          <EditPerson
+            person={person}
+            onSuccess={() => setEditMode(false)}
+            onCancel={() => setEditMode(false)}
+          />
         </div>
       </Page>
     );

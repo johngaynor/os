@@ -110,8 +110,9 @@ export default function Persons() {
     <Page title="People" showTitleMobile>
       <div className="w-full p-6">
         <div className="space-y-4 w-full">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <div className="flex-1">
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
+            {/* Search Input - Full Width on mobile, flex-1 on larger screens */}
+            <div className="w-full sm:flex-1">
               <Input
                 type="text"
                 placeholder="Search name, type, or origin..."
@@ -121,7 +122,9 @@ export default function Persons() {
                 }
               />
             </div>
-            <div className="flex items-center gap-2">
+
+            {/* Buttons Row - side by side, inline with search on larger screens */}
+            <div className="flex flex-row gap-2 sm:gap-4 items-center sm:flex-shrink-0">
               <Button
                 variant="outline"
                 onClick={() =>
@@ -130,7 +133,7 @@ export default function Persons() {
                     nameSort: filters.nameSort === "asc" ? "desc" : "asc",
                   })
                 }
-                className="flex items-center gap-2"
+                className="flex items-center justify-center gap-2 flex-1 sm:flex-none"
               >
                 {filters.nameSort === "desc" ? (
                   <ArrowDownZA className="h-4 w-4" />
@@ -138,13 +141,15 @@ export default function Persons() {
                   <ArrowUpAZ className="h-4 w-4" />
                 )}
               </Button>
-              <Button asChild>
-                <a href="/social/persons/new">Add Person</a>
+              <Button asChild className="flex-1 sm:flex-none">
+                <a href="/social/persons/new" className="text-center">
+                  Add Person
+                </a>
               </Button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredPersons.map((person) => (
               <div
                 key={person.id}
