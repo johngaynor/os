@@ -187,7 +187,7 @@ export default function Connect() {
               </div>
 
               {/* Alphabetical Contact List */}
-              <nav className="space-y-2 max-h-[70vh] overflow-y-scroll">
+              <nav className="space-y-2 max-h-[50vh] overflow-y-scroll">
                 {alphabetSections.length === 0 ? (
                   <p className="text-sm text-muted-foreground px-3">
                     No people found
