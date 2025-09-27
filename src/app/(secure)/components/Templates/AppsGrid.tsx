@@ -9,7 +9,7 @@ const apps = [
     id: 1,
     name: "People",
     description: "Manage your friends, contacts, etc.",
-    link: "/social/people",
+    link: "/social/persons",
     favorite: 0,
   },
   {

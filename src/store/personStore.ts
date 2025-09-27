@@ -17,7 +17,7 @@ export type Person = {
 
 type PersonState = {
   // State
-  persons: Person[];
+  persons: Person[] | null;
   loading: boolean;
   error: string | null;
   selectedPerson: Person | null;
@@ -45,7 +45,7 @@ export const usePersonStore = create<PersonState>()(
   devtools(
     (set, get) => ({
       // Initial state
-      persons: [],
+      persons: null,
       loading: false,
       error: null,
       selectedPerson: null,
@@ -57,7 +57,7 @@ export const usePersonStore = create<PersonState>()(
       selectPerson: (selectedPerson) => set({ selectedPerson }),
       clearState: () =>
         set({
-          persons: [],
+          persons: null,
           loading: false,
           error: null,
           selectedPerson: null,
@@ -75,7 +75,7 @@ export const usePersonStore = create<PersonState>()(
           }
 
           const persons = await response.json();
-          set({ persons, loading: false, error: null });
+          set({ persons: persons || [], loading: false, error: null });
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : "An error occurred",
@@ -87,6 +87,7 @@ export const usePersonStore = create<PersonState>()(
       createPerson: async (personData) => {
         set({ loading: true, error: null });
         try {
+          console.log("starting to create person", personData);
           const response = await fetch("/api/persons", {
             method: "POST",
             headers: {
@@ -95,6 +96,8 @@ export const usePersonStore = create<PersonState>()(
             body: JSON.stringify(personData),
           });
 
+          console.log(response);
+
           if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.error || "Failed to create person");
@@ -102,7 +105,7 @@ export const usePersonStore = create<PersonState>()(
 
           const newPerson = await response.json();
           set((state) => ({
-            persons: [newPerson, ...state.persons],
+            persons: [newPerson, ...(state.persons || [])],
             loading: false,
             error: null,
           }));
@@ -134,7 +137,7 @@ export const usePersonStore = create<PersonState>()(
 
           const updatedPerson = await response.json();
           set((state) => ({
-            persons: state.persons.map((person) =>
+            persons: (state.persons || []).map((person) =>
               person.id === updatedPerson.id ? updatedPerson : person
             ),
             selectedPerson:
@@ -167,7 +170,7 @@ export const usePersonStore = create<PersonState>()(
           }
 
           set((state) => ({
-            persons: state.persons.filter((person) => person.id !== id),
+            persons: (state.persons || []).filter((person) => person.id !== id),
             selectedPerson:
               state.selectedPerson?.id === id ? null : state.selectedPerson,
             loading: false,
@@ -190,7 +193,7 @@ export const usePersonStore = create<PersonState>()(
 );
 
 // Selector hooks for convenience
-export const usePersons = () => usePersonStore((state) => state.persons);
+export const usePersons = () => usePersonStore((state) => state.persons || []);
 export const usePersonLoading = () => usePersonStore((state) => state.loading);
 export const usePersonError = () => usePersonStore((state) => state.error);
 export const useSelectedPerson = () =>
