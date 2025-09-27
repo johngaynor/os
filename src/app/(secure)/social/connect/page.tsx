@@ -36,86 +36,6 @@ export default function Connect() {
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
-  const sampleInteractions = [
-    {
-      id: "1",
-      personId: "person-1",
-      latitude: 40.7128,
-      longitude: -74.006,
-      placeName: "Central Park",
-      interactionTime: "2025-09-27T14:30:00.000Z",
-      notes: {
-        mood: "happy",
-        topics: ["work", "weekend plans"],
-        duration: "45 minutes",
-        quality: 8,
-      },
-      createdAt: "2025-09-27T10:00:00.000Z",
-      updatedAt: "2025-09-27T10:00:00.000Z",
-      person: {
-        id: "person-1",
-        name: "John Smith",
-      },
-    },
-    {
-      id: "2",
-      personId: "person-2",
-      latitude: null,
-      longitude: null,
-      placeName: "Coffee Shop on 5th",
-      interactionTime: "2025-09-26T16:15:00.000Z",
-      notes: {
-        mood: "excited",
-        topics: ["new project", "family"],
-        duration: "30 minutes",
-        quality: 9,
-      },
-      createdAt: "2025-09-26T16:20:00.000Z",
-      updatedAt: "2025-09-26T16:20:00.000Z",
-      person: {
-        id: "person-2",
-        name: "Sarah Johnson",
-      },
-    },
-    {
-      id: "3",
-      personId: "person-3",
-      latitude: 40.7589,
-      longitude: -73.9851,
-      placeName: null,
-      interactionTime: "2025-09-25T19:00:00.000Z",
-      notes:
-        "Quick catch-up over dinner. Discussed upcoming vacation plans and shared some funny stories from work.",
-      createdAt: "2025-09-25T20:00:00.000Z",
-      updatedAt: "2025-09-25T20:00:00.000Z",
-      person: {
-        id: "person-3",
-        name: "Mike Wilson",
-      },
-    },
-    {
-      id: "4",
-      personId: "person-1",
-      latitude: 40.7505,
-      longitude: -73.9934,
-      placeName: "Bryant Park",
-      interactionTime: "2025-09-24T12:00:00.000Z",
-      notes: {
-        mood: "relaxed",
-        topics: ["books", "travel"],
-        duration: "1 hour",
-        quality: 7,
-        weather: "sunny",
-      },
-      createdAt: "2025-09-24T13:00:00.000Z",
-      updatedAt: "2025-09-24T13:00:00.000Z",
-      person: {
-        id: "person-1",
-        name: "John Smith",
-      },
-    },
-  ];
-
   // Group persons alphabetically by first letter
   const groupedPersons = useMemo(() => {
     const allLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -262,7 +182,10 @@ export default function Connect() {
                   </Button>
 
                   {/* New Interaction Button */}
-                  <Button className="flex items-center gap-2 flex-1 sm:flex-none">
+                  <Button
+                    onClick={() => router.push("/social/connect/new")}
+                    className="flex items-center gap-2 flex-1 sm:flex-none"
+                  >
                     <Plus className="h-4 w-4" />
                     <span className="hidden sm:inline">New Interaction</span>
                   </Button>
@@ -278,8 +201,8 @@ export default function Connect() {
                         variant="secondary"
                         className="flex items-center gap-2"
                       >
-                        person <span className="italic font-normal">=</span> "
-                        {selectedPersonId}"
+                        person <span className="italic font-normal">=</span> &quot;
+                        {selectedPersonId}&quot;
                         <button
                           onClick={() => updateSelectedPerson(null)}
                           className="ml-1 hover:bg-muted-foreground/20 rounded-full p-0.5"
@@ -294,8 +217,8 @@ export default function Connect() {
                         className="flex items-center gap-2"
                       >
                         name, location, notes{" "}
-                        <span className="italic font-normal">contains</span> "
-                        {interactionSearch}"
+                        <span className="italic font-normal">contains</span> &quot;
+                        {interactionSearch}&quot;
                         <button
                           onClick={() => setInteractionSearch("")}
                           className="ml-1 hover:bg-muted-foreground/20 rounded-full p-0.5"
@@ -315,7 +238,7 @@ export default function Connect() {
 
             {/* Interactions Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sampleInteractions
+              {interactions
                 .filter((interaction) =>
                   selectedPersonId
                     ? interaction.personId === selectedPersonId
@@ -323,6 +246,9 @@ export default function Connect() {
                 )
                 .filter(
                   (interaction) =>
+                    interaction.title
+                      ?.toLowerCase()
+                      .includes(interactionSearch.toLowerCase()) ||
                     interaction.placeName
                       ?.toLowerCase()
                       .includes(interactionSearch.toLowerCase()) ||
@@ -347,9 +273,14 @@ export default function Connect() {
                     className="p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors"
                   >
                     <div className="space-y-2">
+                      {/* Title */}
+                      <h3 className="font-semibold text-lg text-foreground">
+                        {interaction.title}
+                      </h3>
+
                       {/* Person name (only show when viewing all interactions) */}
                       {!selectedPersonId && (
-                        <h4 className="font-semibold text-foreground">
+                        <h4 className="font-medium text-muted-foreground">
                           {interaction.person?.name}
                         </h4>
                       )}
@@ -370,14 +301,6 @@ export default function Connect() {
                         <h4 className="font-medium">{interaction.placeName}</h4>
                       )}
 
-                      {/* Location coordinates */}
-                      {interaction.latitude && interaction.longitude && (
-                        <p className="text-xs text-muted-foreground">
-                          {interaction.latitude.toFixed(4)},{" "}
-                          {interaction.longitude.toFixed(4)}
-                        </p>
-                      )}
-
                       {/* Notes preview */}
                       {interaction.notes && (
                         <p className="text-sm text-muted-foreground line-clamp-3">
@@ -392,7 +315,7 @@ export default function Connect() {
             </div>
 
             {/* No interactions message */}
-            {sampleInteractions.filter((interaction) =>
+            {interactions.filter((interaction) =>
               selectedPersonId
                 ? interaction.personId === selectedPersonId
                 : true

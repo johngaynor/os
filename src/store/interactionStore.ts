@@ -6,11 +6,12 @@ import { toast } from "sonner";
 export type Interaction = {
   id: string;
   personId: string;
+  title: string;
   latitude?: number | null;
   longitude?: number | null;
   placeName?: string | null;
   interactionTime?: string | null; // ISO string format
-  notes?: any; // JSON data
+  notes?: Record<string, unknown> | string; // JSON data
   createdAt: string;
   updatedAt: string;
   person?: {
@@ -177,12 +178,6 @@ export const useInteractionStore = create<InteractionState>()(
       deleteInteraction: async (id) => {
         set({ loading: true, error: null });
         try {
-          // Get the interaction before deleting for the toast message
-          const state = get();
-          const interactionToDelete = state.interactions?.find(
-            (interaction) => interaction.id === id
-          );
-
           const response = await fetch(`/api/interactions/${id}`, {
             method: "DELETE",
           });

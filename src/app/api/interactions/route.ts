@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       personId,
+      title,
       latitude,
       longitude,
       placeName,
@@ -99,6 +100,13 @@ export async function POST(request: NextRequest) {
     if (!personId) {
       return NextResponse.json(
         { error: "Person ID is required" },
+        { status: 400 }
+      );
+    }
+
+    if (!title) {
+      return NextResponse.json(
+        { error: "Title is required" },
         { status: 400 }
       );
     }
@@ -119,6 +127,7 @@ export async function POST(request: NextRequest) {
     const newInteraction = await prisma.interaction.create({
       data: {
         personId,
+        title,
         latitude: latitude || null,
         longitude: longitude || null,
         placeName: placeName || null,

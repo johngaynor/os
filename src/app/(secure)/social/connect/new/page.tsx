@@ -4,9 +4,9 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usePersonStore } from "@/store/personStore";
 import { Page, Error } from "../../../components/Pages";
-import PersonForm from "../components/PersonForm";
+import InteractionForm from "../components/InteractionForm";
 
-export default function NewPerson() {
+export default function NewInteraction() {
   const router = useRouter();
   const { fetchPersons, persons, error } = usePersonStore();
 
@@ -18,18 +18,18 @@ export default function NewPerson() {
   }, [persons, error, fetchPersons]);
 
   const handleSuccess = () => {
-    router.push("/social/persons");
+    router.push("/social/connect");
   };
 
   const handleCancel = () => {
-    router.push("/social/persons");
+    router.push("/social/connect");
   };
 
   if (error) return <Error error={error} />;
 
   return (
-    <Page title="Add New Person" showTitleMobile>
-      <PersonForm onSuccess={handleSuccess} onCancel={handleCancel} />
+    <Page title="Add New Interaction" showTitleMobile>
+      <InteractionForm onSuccess={handleSuccess} onCancel={handleCancel} />
     </Page>
   );
 }

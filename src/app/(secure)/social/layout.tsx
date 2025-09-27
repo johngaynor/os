@@ -27,13 +27,13 @@ export default function SocialLayout({ children }: SocialLayoutProps) {
     if (!persons && !personsError && !personsLoading) {
       fetchPersons();
     }
-  }, [persons, personsError, fetchPersons]);
+  }, [persons, personsError, personsLoading, fetchPersons]);
 
   useEffect(() => {
     if (!interactions && !interactionsError && !interactionsLoading) {
       fetchInteractions();
     }
-  }, [interactions, interactionsError, fetchInteractions]);
+  }, [interactions, interactionsError, interactionsLoading, fetchInteractions]);
 
   return <>{children}</>;
 }

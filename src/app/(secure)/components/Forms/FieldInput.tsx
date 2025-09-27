@@ -28,7 +28,7 @@ interface FieldInputProps {
 
 export const FieldInput: React.FC<FieldInputProps> = ({
   label,
-  name,
+  name: _name,
   register,
   error,
   required = false,

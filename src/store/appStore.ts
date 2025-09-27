@@ -18,7 +18,7 @@ type AppState = {
 
 export const useAppStore = create<AppState>()(
   devtools(
-    (set, get) => ({
+    (set, _get) => ({
       // Initial state
       sidebarOpen: false,
       theme: "system" as const,

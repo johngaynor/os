@@ -34,6 +34,7 @@ model Person {
 model Interaction {
   id                    String    @id @default(cuid())
   personId              String    @map("person_id")
+  title                 String    @db.VarChar(255)
   latitude              Float?
   longitude             Float?
   placeName             String?   @db.Text @map("place_name")
