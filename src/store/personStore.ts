@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { toast } from "sonner";
 
 // Types
 export type Person = {
@@ -106,6 +107,7 @@ export const usePersonStore = create<PersonState>()(
             loading: false,
             error: null,
           }));
+          toast.success(`${newPerson.name} has been created successfully!`);
           return newPerson;
         } catch (error) {
           set({
@@ -144,6 +146,7 @@ export const usePersonStore = create<PersonState>()(
             loading: false,
             error: null,
           }));
+          toast.success(`${updatedPerson.name} has been updated successfully!`);
           return updatedPerson;
         } catch (error) {
           set({
