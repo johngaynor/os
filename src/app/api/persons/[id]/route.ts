@@ -4,10 +4,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
+    const { id } = await context.params;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -15,7 +16,7 @@ export async function GET(
 
     const person = await prisma.person.findFirst({
       where: {
-        id: params.id,
+        id: id,
         userId: userId, // Ensure user can only access their own persons
       },
     });
@@ -36,10 +37,11 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
+    const { id } = await context.params;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -52,7 +54,7 @@ export async function PATCH(
       relationshipType,
       relationshipStrength,
       occupation,
-      context,
+      context: personContext,
     } = body;
 
     // Validate required fields
@@ -77,7 +79,7 @@ export async function PATCH(
     // First check if the person exists and belongs to the user
     const existingPerson = await prisma.person.findFirst({
       where: {
-        id: params.id,
+        id: id,
         userId: userId,
       },
     });
@@ -89,7 +91,7 @@ export async function PATCH(
     // Update the person
     const updatedPerson = await prisma.person.update({
       where: {
-        id: params.id,
+        id: id,
       },
       data: {
         name,
@@ -97,7 +99,7 @@ export async function PATCH(
         relationshipType,
         relationshipStrength: parseInt(relationshipStrength),
         occupation,
-        context,
+        context: personContext,
         updatedAt: new Date(),
       },
     });
@@ -114,10 +116,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await auth();
+    const { id } = await context.params;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -126,7 +129,7 @@ export async function DELETE(
     // First check if the person exists and belongs to the user
     const existingPerson = await prisma.person.findFirst({
       where: {
-        id: params.id,
+        id: id,
         userId: userId,
       },
     });
@@ -138,7 +141,7 @@ export async function DELETE(
     // Delete the person
     await prisma.person.delete({
       where: {
-        id: params.id,
+        id: id,
       },
     });
 

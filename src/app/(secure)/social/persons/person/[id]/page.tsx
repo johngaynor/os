@@ -5,10 +5,11 @@ import { useParams, useRouter } from "next/navigation";
 import { usePersonStore } from "@/store/personStore";
 import { Page, Error } from "../../../../components/Pages";
 import EditPerson from "../../components/PersonForm";
-import { Button, Skeleton, H3 } from "@/components/ui";
+import { Button, H3 } from "@/components/ui";
 import { Card, CardContent } from "@/components/ui/card";
 import { FieldValue } from "../../../../components/Forms/FieldValue";
 import { ArrowLeft, Edit, Trash2 } from "lucide-react";
+import PersonLoading from "./components/PersonLoading";
 
 export default function Person() {
   const params = useParams();
@@ -36,23 +37,7 @@ export default function Person() {
   };
 
   // Show loading skeleton while fetching or if person not found and still loading
-  if (loading || (!person && !persons)) {
-    return (
-      <Page title="Person" showTitleMobile>
-        <div className="space-y-4">
-          <Skeleton className="h-8 w-48" />
-          <div className="border rounded-lg p-4 space-y-3">
-            <Skeleton className="h-6 w-32" />
-            <Skeleton className="h-4 w-48" />
-            <Skeleton className="h-4 w-40" />
-            <Skeleton className="h-4 w-36" />
-            <Skeleton className="h-3 w-full max-w-md" />
-          </div>
-        </div>
-      </Page>
-    );
-  }
-
+  if (loading || (!person && !persons)) return <PersonLoading />;
   if (error) return <Error error={error} />;
 
   // Show not found if persons are loaded but person doesn't exist
