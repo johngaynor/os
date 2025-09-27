@@ -120,6 +120,7 @@ export default function PersonForm({
           <FieldInput
             label="Relationship Strength (1-5)"
             name="relationshipStrength"
+            tooltip="1 - Just met, 5 - Close friend"
             register={register("relationshipStrength", {
               valueAsNumber: true,
               required: "Relationship strength is required",
@@ -161,7 +162,7 @@ export default function PersonForm({
             </Button>
           )}
           <Button type="submit" disabled={loading}>
-            {loading ? "Saving..." : isEditing ? "Update" : "Submit"}
+            {loading ? "Please wait..." : isEditing ? "Update" : "Submit"}
           </Button>
         </div>
       </form>

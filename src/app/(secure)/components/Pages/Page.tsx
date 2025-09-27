@@ -39,13 +39,23 @@ export function Page({ children, showTitleMobile = false, title }: PageProps) {
                   segment === "Dashboard"
                     ? "/"
                     : "/" + segments.slice(0, idx + 1).join("/");
+                
+                // Truncate long segments (like userIds) to max 10 characters
+                const displaySegment = segment.length > 10 
+                  ? segment.substring(0, 10) + "..." 
+                  : segment;
+                
                 return (
                   <React.Fragment key={idx}>
                     {idx > 0 && <BreadcrumbSeparator />}
                     <BreadcrumbItem>
                       <BreadcrumbLink asChild>
-                        <Link href={href} className="capitalize">
-                          {segment}
+                        <Link 
+                          href={href} 
+                          className="capitalize max-w-[120px] truncate inline-block"
+                          title={segment} // Show full text on hover
+                        >
+                          {displaySegment}
                         </Link>
                       </BreadcrumbLink>
                     </BreadcrumbItem>
