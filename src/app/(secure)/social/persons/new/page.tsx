@@ -2,30 +2,30 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import { usePersonStore } from "@/store/personStore";
-import PageTemplate from "../../../components/Templates/PageTemplate";
+import { Page, Error } from "../../../components/Pages";
 import EditPerson from "../components/PersonForm";
 
-export default function NewPersonPage() {
+export default function NewPerson() {
   const router = useRouter();
-  const { user, isLoaded } = useUser();
   const { fetchPersons, persons, error } = usePersonStore();
 
   // Ensure we have existing persons loaded before creating a new one
   useEffect(() => {
-    if (isLoaded && user && !persons && !error) {
+    if (!persons && !error) {
       fetchPersons();
     }
-  }, [isLoaded, user, persons, error, fetchPersons]);
+  }, [persons, error, fetchPersons]);
 
   const handleSuccess = () => {
     router.push("/social/persons");
   };
 
+  if (error) return <Error error={error} />;
+
   return (
-    <PageTemplate title="Add New Person" showTitleMobile>
+    <Page title="Add New Person" showTitleMobile>
       <EditPerson onSuccess={handleSuccess} />
-    </PageTemplate>
+    </Page>
   );
 }

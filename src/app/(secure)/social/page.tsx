@@ -1,14 +1,14 @@
 import React from "react";
-import PageTemplate from "../components/Templates/PageTemplate";
-import AppsGrid from "../components/Templates/AppsGrid";
+import { Page } from "../components/Pages";
+import AppsGrid from "../components/AppsGrid";
 
 const title = "Social";
 
-export default function Page() {
+export default function Social() {
   return (
-    <PageTemplate title={title}>
+    <Page title={title} showTitleMobile>
       <AppsGrid filter="/social" />
-    </PageTemplate>
+    </Page>
   );
 }
 

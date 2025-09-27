@@ -1,10 +1,10 @@
 "use client";
-import PageTemplate from "../components/Templates/PageTemplate";
+import { Page } from "../components/Pages";
 
-export default function DashboardPage() {
+export default function Dashboard() {
   return (
-    <PageTemplate title="Today" showTitleMobile>
+    <Page title="Today" showTitleMobile>
       Dashboard
-    </PageTemplate>
+    </Page>
   );
 }

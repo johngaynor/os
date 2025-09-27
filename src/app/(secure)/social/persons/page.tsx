@@ -2,10 +2,10 @@
 
 import React, { useEffect } from "react";
 import { usePersonStore } from "@/store/personStore";
-import PageTemplate from "../../components/Templates/PageTemplate";
+import { Error, Page } from "../../components/Pages";
 import { Skeleton, Button } from "@/components/ui";
 
-export default function Page() {
+export default function Persons() {
   const { fetchPersons, persons, loading, error } = usePersonStore();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function Page() {
 
   if (loading) {
     return (
-      <PageTemplate title="People" showTitleMobile>
+      <Page title="People" showTitleMobile>
         <div className="space-y-4 w-full">
           <div className="flex justify-between items-center">
             <Skeleton className="h-6 w-48" />
@@ -43,25 +43,11 @@ export default function Page() {
             ))}
           </div>
         </div>
-      </PageTemplate>
+      </Page>
     );
   }
 
-  if (error) {
-    return (
-      <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-        <p className="text-destructive font-medium">Error: {error}</p>
-        <Button
-          onClick={() => window.location.reload()}
-          variant="outline"
-          size="sm"
-          className="mt-2"
-        >
-          Try Again
-        </Button>
-      </div>
-    );
-  }
+  if (error) return <Error error={error} />;
 
   if (!persons || persons.length === 0) {
     return (
@@ -77,7 +63,7 @@ export default function Page() {
   }
 
   return (
-    <PageTemplate title="People" showTitleMobile>
+    <Page title="People" showTitleMobile>
       <div className="space-y-4 w-full">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">
@@ -130,6 +116,6 @@ export default function Page() {
           ))}
         </div>
       </div>
-    </PageTemplate>
+    </Page>
   );
 }

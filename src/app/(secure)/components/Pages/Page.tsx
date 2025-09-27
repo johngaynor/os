@@ -11,17 +11,13 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-type PageTemplateProps = {
+type PageProps = {
   title: string;
   showTitleMobile?: boolean;
   children: React.ReactNode;
 };
 
-export default function PageTemplate({
-  children,
-  showTitleMobile = false,
-  title,
-}: PageTemplateProps) {
+export function Page({ children, showTitleMobile = false, title }: PageProps) {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 

@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { usePersonStore } from "@/store/personStore";
-import PageTemplate from "../../../../components/Templates/PageTemplate";
+import { Page, Error } from "../../../../components/Pages";
 import EditPerson from "../../components/PersonForm";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function PersonPage() {
+export default function Person() {
   const params = useParams();
   const router = useRouter();
   const { fetchPersons, persons, deletePerson, loading, error } =
@@ -36,7 +36,7 @@ export default function PersonPage() {
   // Show loading skeleton while fetching or if person not found and still loading
   if (loading || (!person && !persons)) {
     return (
-      <PageTemplate title="Person" showTitleMobile>
+      <Page title="Person" showTitleMobile>
         <div className="space-y-4">
           <Skeleton className="h-8 w-48" />
           <div className="border rounded-lg p-4 space-y-3">
@@ -47,33 +47,16 @@ export default function PersonPage() {
             <Skeleton className="h-3 w-full max-w-md" />
           </div>
         </div>
-      </PageTemplate>
+      </Page>
     );
   }
 
-  // Show error if there's an error fetching
-  if (error) {
-    return (
-      <PageTemplate title="Person" showTitleMobile>
-        <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-          <p className="text-destructive font-medium">Error: {error}</p>
-          <Button
-            onClick={() => window.location.reload()}
-            variant="outline"
-            size="sm"
-            className="mt-2"
-          >
-            Try Again
-          </Button>
-        </div>
-      </PageTemplate>
-    );
-  }
+  if (error) return <Error error={error} />;
 
   // Show not found if persons are loaded but person doesn't exist
   if (!person) {
     return (
-      <PageTemplate title="Person Not Found" showTitleMobile>
+      <Page title="Person Not Found" showTitleMobile>
         <div className="text-center py-8">
           <p className="text-muted-foreground mb-4">
             The person you&apos;re looking for doesn&apos;t exist.
@@ -82,13 +65,13 @@ export default function PersonPage() {
             Back to People
           </Button>
         </div>
-      </PageTemplate>
+      </Page>
     );
   }
 
   if (editMode) {
     return (
-      <PageTemplate title={`Edit ${person.name}`} showTitleMobile>
+      <Page title={`Edit ${person.name}`} showTitleMobile>
         <div className="space-y-4">
           <div className="flex gap-2 mb-4">
             <Button
@@ -101,12 +84,12 @@ export default function PersonPage() {
           </div>
           <EditPerson person={person} onSuccess={() => setEditMode(false)} />
         </div>
-      </PageTemplate>
+      </Page>
     );
   }
 
   return (
-    <PageTemplate title={person.name} showTitleMobile>
+    <Page title={person.name} showTitleMobile>
       <div className="space-y-6">
         {/* Action Buttons */}
         <div className="flex gap-2">
@@ -186,6 +169,6 @@ export default function PersonPage() {
           </div>
         </div>
       </div>
-    </PageTemplate>
+    </Page>
   );
 }
