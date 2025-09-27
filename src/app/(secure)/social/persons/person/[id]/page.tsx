@@ -29,9 +29,14 @@ export default function Person() {
 
   const handleDelete = async () => {
     if (person && confirm(`Are you sure you want to delete ${person.name}?`)) {
+      console.log("Attempting to delete person:", person.id);
       const result = await deletePerson(person.id);
+      console.log("Delete result:", result);
       if (result) {
         router.push("/social/persons");
+      } else {
+        console.error("Delete failed");
+        alert("Failed to delete person. Please try again.");
       }
     }
   };
@@ -44,13 +49,17 @@ export default function Person() {
   if (!person) {
     return (
       <Page title="Person Not Found" showTitleMobile>
-        <div className="text-center py-8">
-          <p className="text-muted-foreground mb-4">
-            The person you&apos;re looking for doesn&apos;t exist.
-          </p>
-          <Button onClick={() => router.push("/social/persons")}>
-            Back to People
-          </Button>
+        <div className="w-full mb-20">
+          <Card className="w-full rounded-sm p-0">
+            <CardContent className="text-center py-8">
+              <p className="text-muted-foreground mb-4">
+                The person you&apos;re looking for doesn&apos;t exist.
+              </p>
+              <Button onClick={() => router.push("/social/persons")}>
+                Back to List
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </Page>
     );
