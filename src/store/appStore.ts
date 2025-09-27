@@ -1,187 +1,41 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-// Types
-export type Person = {
-  id: string;
-  userId: string;
-  name: string;
-  origin?: string;
-  relationshipType: string;
-  relationshipStrength: number;
-  occupation?: string;
-  context?: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
+// Global app state types
 type AppState = {
-  // State
-  persons: Person[];
-  loading: boolean;
-  error: string | null;
-  selectedPerson: Person | null;
+  // Global UI state
+  sidebarOpen: boolean;
+  theme: "light" | "dark" | "system";
+  notifications: string[];
 
-  // Actions
-  setLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
-  clearError: () => void;
-  selectPerson: (person: Person | null) => void;
-  clearState: () => void;
-
-  // Async Actions
-  fetchPersons: () => Promise<void>;
-  createPerson: (
-    personData: Omit<Person, "id" | "userId" | "createdAt" | "updatedAt">
-  ) => Promise<Person | null>;
-  updatePerson: (
-    id: string,
-    updates: Partial<Person>
-  ) => Promise<Person | null>;
-  deletePerson: (id: string) => Promise<boolean>;
+  // Global actions
+  setSidebarOpen: (open: boolean) => void;
+  setTheme: (theme: "light" | "dark" | "system") => void;
+  addNotification: (message: string) => void;
+  removeNotification: (index: number) => void;
+  clearNotifications: () => void;
 };
 
 export const useAppStore = create<AppState>()(
   devtools(
     (set, get) => ({
       // Initial state
-      persons: [],
-      loading: false,
-      error: null,
-      selectedPerson: null,
+      sidebarOpen: false,
+      theme: "system" as const,
+      notifications: [],
 
-      // Sync actions
-      setLoading: (loading) => set({ loading }),
-      setError: (error) => set({ error, loading: false }),
-      clearError: () => set({ error: null }),
-      selectPerson: (selectedPerson) => set({ selectedPerson }),
-      clearState: () =>
-        set({
-          persons: [],
-          loading: false,
-          error: null,
-          selectedPerson: null,
-        }),
-
-      // Async actions
-      fetchPersons: async () => {
-        set({ loading: true, error: null });
-        try {
-          const response = await fetch("/api/persons");
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Failed to fetch persons");
-          }
-
-          const persons = await response.json();
-          set({ persons, loading: false, error: null });
-        } catch (error) {
-          set({
-            error: error instanceof Error ? error.message : "An error occurred",
-            loading: false,
-          });
-        }
-      },
-
-      createPerson: async (personData) => {
-        set({ loading: true, error: null });
-        try {
-          const response = await fetch("/api/persons", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(personData),
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Failed to create person");
-          }
-
-          const newPerson = await response.json();
-          set((state) => ({
-            persons: [newPerson, ...state.persons],
-            loading: false,
-            error: null,
-          }));
-          return newPerson;
-        } catch (error) {
-          set({
-            error: error instanceof Error ? error.message : "An error occurred",
-            loading: false,
-          });
-          return null;
-        }
-      },
-
-      updatePerson: async (id, updates) => {
-        set({ loading: true, error: null });
-        try {
-          const response = await fetch(`/api/persons/${id}`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(updates),
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Failed to update person");
-          }
-
-          const updatedPerson = await response.json();
-          set((state) => ({
-            persons: state.persons.map((person) =>
-              person.id === updatedPerson.id ? updatedPerson : person
-            ),
-            selectedPerson:
-              state.selectedPerson?.id === updatedPerson.id
-                ? updatedPerson
-                : state.selectedPerson,
-            loading: false,
-            error: null,
-          }));
-          return updatedPerson;
-        } catch (error) {
-          set({
-            error: error instanceof Error ? error.message : "An error occurred",
-            loading: false,
-          });
-          return null;
-        }
-      },
-
-      deletePerson: async (id) => {
-        set({ loading: true, error: null });
-        try {
-          const response = await fetch(`/api/persons/${id}`, {
-            method: "DELETE",
-          });
-
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Failed to delete person");
-          }
-
-          set((state) => ({
-            persons: state.persons.filter((person) => person.id !== id),
-            selectedPerson:
-              state.selectedPerson?.id === id ? null : state.selectedPerson,
-            loading: false,
-            error: null,
-          }));
-          return true;
-        } catch (error) {
-          set({
-            error: error instanceof Error ? error.message : "An error occurred",
-            loading: false,
-          });
-          return false;
-        }
-      },
+      // Actions
+      setSidebarOpen: (open) => set({ sidebarOpen: open }),
+      setTheme: (theme) => set({ theme }),
+      addNotification: (message) =>
+        set((state) => ({
+          notifications: [...state.notifications, message],
+        })),
+      removeNotification: (index) =>
+        set((state) => ({
+          notifications: state.notifications.filter((_, i) => i !== index),
+        })),
+      clearNotifications: () => set({ notifications: [] }),
     }),
     {
       name: "app-store", // name for devtools
@@ -190,8 +44,7 @@ export const useAppStore = create<AppState>()(
 );
 
 // Selector hooks for convenience
-export const usePersons = () => useAppStore((state) => state.persons);
-export const useLoading = () => useAppStore((state) => state.loading);
-export const useError = () => useAppStore((state) => state.error);
-export const useSelectedPerson = () =>
-  useAppStore((state) => state.selectedPerson);
+export const useSidebarOpen = () => useAppStore((state) => state.sidebarOpen);
+export const useTheme = () => useAppStore((state) => state.theme);
+export const useNotifications = () =>
+  useAppStore((state) => state.notifications);

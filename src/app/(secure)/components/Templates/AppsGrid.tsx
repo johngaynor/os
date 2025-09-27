@@ -7,6 +7,13 @@ import { Star } from "lucide-react";
 const apps = [
   {
     id: 1,
+    name: "People",
+    description: "Manage your friends, contacts, etc.",
+    link: "/social/people",
+    favorite: 0,
+  },
+  {
+    id: 2,
     name: "Connect",
     description: "Personal CRM to manage relationships.",
     link: "/social/connect",
